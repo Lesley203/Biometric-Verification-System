@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-Biometric_Verification_System-971835b4-226a-4923-8290-74f9f01f6ede</UserSecretsId>
+    <RootNamespace>Biometric_Verification_System</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\lib\libzkfpcsharp.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="{215d64d2-031c-33c7-96e3-61794cd1ee61}">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>4</VersionMinor>
+      <VersionMajor>2</VersionMajor>
+      <Guid>215d64d2-031c-33c7-96e3-61794cd1ee61</Guid>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\lib\libzkfpcsharp.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ImageProcessor" Version="2.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.24" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.29" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.29" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.29" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.29">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="libzkfpcsharp">
+      <HintPath>..\..\..\Users\Ronewa\OneDrive\Desktop\sdk\ZKFingerSDK_Windows_Standard\ZKFinger Standard SDK 5.3.0.33\C#\lib\x64\libzkfpcsharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

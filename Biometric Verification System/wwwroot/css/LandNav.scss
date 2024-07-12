@@ -1,0 +1,228 @@
+﻿// variables
+$darkPurple: #00106a;
+$lightBlue: #dfe9ff;
+$activeBlue: #4b71ff;
+$white: #ffffff;
+$lightPurple: #989dc5;
+
+// mixins
+@mixin box-shadow($top, $left, $blur, $color, $inset: "") {
+    -webkit-box-shadow: $top $left $blur $color #{$inset};
+    -moz-box-shadow: $top $left $blur $color #{$inset};
+    box-shadow: $top $left $blur $color #{$inset};
+}
+
+body {
+    background: $lightBlue;
+    font-family: Lato, sans-serif;
+}
+
+// navigation styling
+nav {
+    height: 50px;
+    background: $white;
+    @include box-shadow(0, .5rem, 1.5rem, rgba(0,0,0,.15));
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    z-index: -2;
+    position: relative;
+
+    ul {
+        margin: 0;
+        list-style: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        li {
+            margin-right: 30px;
+            color: $activeBlue;
+
+            &:last-child {
+                margin-right: 0px;
+            }
+        }
+    }
+
+    .logo {
+        height: 50px;
+        width: 75px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+        margin-right: 30px;
+        background-color: #4b71ff;
+        cursor: pointer;
+    }
+
+    .arrow-down {
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 15px solid #fff;
+    }
+}
+
+
+// banner styles
+.banner {
+    height: auto;
+    margin: 32px 0px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+
+    @media (min-width: 768px) {
+        height: 450px;
+        margin-bottom: 32px;
+    }
+
+    .banner-image {
+        position: absolute;
+        opacity: .25;
+        right: 0px;
+        top: 0px;
+        height: 300px;
+        z-index: -1;
+        -webkit-filter: drop-shadow(0 3rem 0.05rem rgba(191, 216, 255, 1));
+        filter: drop-shadow(0 3rem 0.05rem rgba(191, 216, 255, 1));
+
+        @media (min-width: 768px) {
+            display: inherit;
+            height: 400px;
+            top: 0px;
+            opacity: 0.5;
+        }
+
+        @media (min-width: 992px) {
+            height: 500px;
+            top: -50px;
+            opacity: 1;
+        }
+    }
+
+    .banner-text {
+        max-width: 550px;
+        float: left;
+
+        h1 {
+            color: $darkPurple;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: $darkPurple;
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+    }
+
+    button {
+        border: 0;
+        border-radius: 50px;
+        padding: .75rem 2.75rem;
+        background: $activeBlue;
+        color: $white;
+        box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.25);
+        cursor: pointer;
+        position: relative;
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 1px;
+        -webkit-transition: all 0.3s ease-in-out;
+        -o-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            -webkit-transform: translateY(-5px);
+            -ms-transform: translateY(-5px);
+            -o-transform: translateY(-5px);
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 1.5rem rgba(0,0,0,.25);
+        }
+    }
+}
+
+// card styles
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.card {
+    padding: 16px 24px;
+    background: $white;
+    height: 100%;
+    position: relative;
+    border: none;
+    box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.15);
+    border: 2px solid transparent;
+    -webkit-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    z-index: 10;
+
+    h3.card-title {
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: $darkPurple;
+    }
+
+    p {
+        color: $lightPurple;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 72px;
+    }
+
+    .card-link {
+        position: absolute;
+        bottom: 18px;
+    }
+
+    &:hover {
+        -webkit-transform: translateY(-5px);
+        -ms-transform: translateY(-15px);
+        -o-transform: translateY(-15px);
+        transform: translateY(-15px);
+        box-shadow: 0 1rem 1.5rem rgba(0,0,0,.15);
+        cursor: pointer;
+    }
+
+    .card-icon {
+        width: 60px;
+        margin-bottom: 8px;
+        position: relative;
+        top: 0;
+        left: -12px;
+    }
+}
+
+// footer styles
+footer {
+    background: $darkPurple;
+    margin: 32px 0 0px;
+    padding: 32px 0;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+            color: $white;
+            margin-bottom: 16px;
+        }
+    }
+}

@@ -1,0 +1,208 @@
+﻿.scan-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.scan {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%; /* Adjust the width to fit three columns */
+    margin-bottom: 20px;
+}
+
+@keyframes animate {
+    0%, 100% {
+        height: 0%;
+    }
+
+    50% {
+        height: 100%;
+    }
+}
+
+
+
+@keyframes animate_line {
+    0%, 100% {
+        top: 0%;
+    }
+
+    50% {
+        top: 100%;
+    }
+}
+
+.scan h4 {
+    text-transform: uppercase;
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    color: red;
+    animation: animate_text 0.5s steps(1) infinite;
+}
+
+
+
+.scan .fingerprint {
+    position: relative;
+    width: 300px;
+    height: 380px;
+    background: url(https://img.playbook.com/IqiomQg4exY5aWlDS3672EcidSBHXX-Ei4HGylg9i0k/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzI4OTJhZjg1/LTMzMTItNGI1OC05/YjVkLTBhNGYxMzU0/YWE0Mg);
+    background-size: 300px;
+}
+
+    .scan .fingerprint::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url(https://img.playbook.com/L3RYf73i1Fwu5y4HqiqQDLvhDOFbUINDLe3PSUvQNUA/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzk0MmIzOGFl/LWFmZmYtNGQ1OS1h/NGFjLTM3YTk4N2Rj/Y2Y0YQ);
+        background-size: 300px;
+        animation: animate 4s ease-in-out infinite;
+    }
+
+@keyframes animate {
+    0%, 100% {
+        height: 0%;
+    }
+
+    50% {
+        height: 100%;
+    }
+}
+
+.scan .fingerprint::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: #3fefef;
+    border-radius: 8px;
+    filter: drop-shadow(0 0 20px #3fefef) drop-shadow(0 0 60px #3fefef);
+    animation: animate_line 4s ease-in-out infinite;
+}
+
+@keyframes animate_line {
+    0%, 100% {
+        top: 0%;
+    }
+
+    50% {
+        top: 100%;
+    }
+}
+
+.scan h3 {
+    text-transform: uppercase;
+    font-size: 2em;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    color: #3fefef;
+    filter: drop-shadow(0 0 20px #3fefef) drop-shadow(0 0 60px #3fefef);
+    animation: animate_text 0.5s steps(1) infinite;
+}
+
+@keyframes animate_text {
+    0%, 100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+@media (max-width: 992px) {
+    .scan {
+        width: 45%; /* Two columns on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .scan {
+        width: 100%; /* One column on small screens */
+    }
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    .scan, #scanner-box {
+        width: 45%; /* Two columns on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .scan, #scanner-box {
+        width: 100%; /* One column on small screens */
+    }
+}
+
+#scanner-box {
+    border-bottom: 2px solid #000;
+    width: 30%;
+    height: 380px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.captured-fingerprint {
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%;
+}
+
+
+
+
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #007bff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+.spinner-text {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.blurred {
+    filter: blur(5px);
+}

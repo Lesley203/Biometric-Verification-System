@@ -1,0 +1,338 @@
+﻿@using Biometric_Verification_System.Areas.Identity.Data
+@{
+    ViewData["Title"] = "Capture";
+    Layout = "~/Views/Shared/_BiometricLayout.cshtml";
+    var status = ViewBag.Status ?? "red";
+}
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <style>
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+
+
+            .action-link i {
+                margin-right: 8px;
+            }
+
+            .action-link:hover {
+                color: #0056b3;
+            }
+    </style>
+</head>
+@if (TempData["AlertMess"] != null)
+{
+    <script>
+        window.onload = function () {
+            var modalHtml = `
+                        <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="alertModalLabel">Nortification</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+        @TempData["AlertMess"]
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="okButton">OK</button>
+                                <button type="button" class="btn btn-secondary" id="laterButton">Later</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>`;
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            $('#alertModal').modal('show');
+
+            document.getElementById('okButton').onclick = function () {
+                window.location.href = '@Url.Action("Index", "Fingerprint", new { Id = ViewData["Id"] })';
+            };
+
+            document.getElementById('laterButton').onclick = function () {
+                window.location.href = '@Url.Action("Intake", "Fingerprint")'; // Change this to where you want to redirect for "Later"
+            };
+        };
+    </script>
+}
+<div class="page-header">
+    <h4 class="page-title">Enrollment</h4>
+    <ul class="breadcrumbs">
+        <li class="nav-home">
+            <a href="#">
+                <i class="fas fa-home"></i>
+            </a>
+        </li>
+        <li class="separator">
+            <i class="fas fa-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+            <a href="#">Enroll</a>
+        </li>
+        <li class="separator">
+            <i class="fas fa-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+            <a href="#">List</a>
+        </li>
+        <li class="separator">
+            <i class="fas fa-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+            <a href="#">Fingerprint Capture</a>
+        </li>
+    </ul>
+</div>
+<div class="row main-content">
+    <div class="col-xl-12 col-lg-7">
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Fingerprint Capture</h6>
+                <div class="Inline">
+
+                    <h6>Status</h6> <div class="status-dot" id="statusDot"></div>
+                </div>
+            
+            </div>
+
+            <div class="card-body">
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-info">
+                        @ViewBag.Message
+                    </div>
+                }
+                @if (ViewBag.Messag != null)
+                {
+                    var user = ViewBag.Messag as BioVerifyUser;
+                    <div class="alert alert-success">
+                        <h5>User Details</h5>
+                        <p><strong>Email:</strong> @user.Email</p>
+                        <!-- Add more fields as needed -->
+                    </div>
+                }
+               @*  <h6 class="m-0 font-weight-bold ">Access Control</h6> *@<br /><br />
+                <div class="scan-container">
+
+                    <div class="scan">
+                        <div class="fingerprint"></div>
+                        <h4 class="blink-soft" style="color:red"><div id="messages"></div></h4>
+                    </div>
+                    <div class="scan">
+                        <div id="fingerprintStatus"></div>
+                       @*  <p id="message">@Model.Message</p> *@
+                        <img id="fingerprintImage" src="" alt="Fingerprint Image" style="display:none;" />
+                    </div>
+                    <div class="scan">
+                        <div class="vertical-center">
+                            <a id="initializeButton" class="action-link" asp-action="Initialize" asp-controller="Fingerprint" asp-route-Id="@ViewData["Id"]"><i class="fas fa-cog"></i> Initialize</a>
+                            <br />  <br />
+                            <a class="action-link" id="openDeviceButton" asp-action="Open" asp-controller="Fingerprint" asp-route-Id="@ViewData["Id"]"><i class="fas fa-play"></i>Open device</a><br />  <br />
+                            <a class="action-link" asp-action="enroll" asp-controller="Fingerprint" asp-route-Id="@ViewData["Id"]"><i class="fas fa-user-plus"></i>enroll</a>
+
+                            <br />  <br />
+                            <a class="action-link" asp-action="Index" asp-controller="SearchEngine"><i class="fas fa-check"></i>Verify</a>
+                            <br />  <br />
+                            <a id="closeDeviceButton" class="action-link" asp-action="CloseDevicee" asp-controller="Fingerprint"><i class="fas fa-stop"></i>Close device</a>
+                        </div>
+                        <br /><br />
+                       
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="">
+   
+</div>
+                    </div>
+<div class="spinner-overlay" style="display:none;">
+    <div class="spinner"></div>
+    <h3 class="spinner-text">Connecting to server...</h3>
+</div>
+<style>
+    .vertical-center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/fingerprintHub")
+        .build();
+
+    connection.on("ReceiveMessage", function (message) {
+        const msgDiv = document.getElementById("messages");
+        const msgElement = document.createElement("div");
+        msgElement.textContent = message;
+        msgDiv.appendChild(msgElement);
+    });
+
+    connection.on("ReceiveFingerprint", function (base64Image) {
+        const fingerprintImage = document.getElementById("fingerprintImage");
+        fingerprintImage.src = "data:image/bmp;base64," + base64Image;
+        fingerprintImage.style.display = "block";
+    });
+
+    connection.on("ReceiveUserDetails", function (userId, firstName, lastName, email) {
+        document.getElementById("userName").innerText = `${firstName} ${lastName}`;
+        document.getElementById("userEmail").innerText = email;
+        $('#userDetailsModal').modal('show');
+    });
+
+    
+    connection.start().then(function () {
+        console.log("SignalR Connected.");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    connection.on("UpdateDeviceStatus", function (status) {
+        console.log("Received status update:", status);
+        setStatus(status);
+    });
+
+    function setStatus(status) {
+        const statusElement = document.getElementById("deviceStatus");
+        console.log("Setting status to:", status); // Debug log
+        statusElement.className = ""; // Reset class
+        switch (status) {
+            case "red":
+                statusElement.classList.add("status-red");
+                break;
+            case "yellow":
+                statusElement.classList.add("status-yellow");
+                break;
+            case "green":
+                statusElement.classList.add("status-green");
+                break;
+            default:
+                console.warn("Unknown status:", status);
+        }
+    }
+
+</script>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.4.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+            var hub = $.connection.fingerprintHub;
+
+            hub.client.receiveMatchResult = function (message) {
+                $('#message').text(message);
+            };
+
+            $.connection.hub.start().done(function () {
+                console.log('SignalR connected');
+            });
+        });
+    </script>
+
+  
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Function to show the spinner and blur the background
+        function showSpinner() {
+            document.querySelector('.main-content').classList.add('blurred');
+            document.querySelector('.spinner-overlay').style.display = 'flex';
+        }
+
+        // Function to hide the spinner
+        function hideSpinner() {
+            document.querySelector('.main-content').classList.remove('blurred');
+            document.querySelector('.spinner-overlay').style.display = 'none';
+        }
+
+        // Show spinner when the open device button is clicked
+       
+    });
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="userName"></span></p>
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                <!-- Add more fields as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+
+
+    // Example JavaScript to update status dot
+    $(document).ready(function () {
+        var deviceStatus = '@ViewBag.DeviceStatus';
+
+        switch (deviceStatus) {
+            case 'red':
+                $('#statusDot').css('background-color', 'red');
+                break;
+            case 'yellow':
+                $('#statusDot').css('background-color', 'yellow');
+                break;
+            case 'green':
+                $('#statusDot').css('background-color', 'green');
+                break;
+            default:
+                $('#statusDot').css('background-color', 'red');
+                break;
+        }
+    });
+
+</script>
+
+

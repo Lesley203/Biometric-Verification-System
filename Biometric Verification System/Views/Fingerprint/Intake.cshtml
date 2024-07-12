@@ -1,0 +1,82 @@
+﻿@using Biometric_Verification_System.Areas.Identity.Data
+
+@{
+    ViewData["Title"] = "Intake";
+    Layout = "~/Views/Shared/_BiometricLayout.cshtml";
+   
+    var usersWithoutFile = TempData["UsersWithoutFile"] as IEnumerable<BioVerifyUser>;
+    int row = 0;
+}
+<div class="page-header">
+    <h4 class="page-title">Enrollment</h4>
+    <ul class="breadcrumbs">
+        <li class="nav-home">
+            <a href="#">
+                <i class="fas fa-home"></i>
+            </a>
+        </li>
+        <li class="separator">
+            <i class="fas fa-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+            <a href="#">Enroll</a>
+        </li>
+        <li class="separator">
+            <i class="fas fa-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+            <a href="#">List</a>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-xl-12 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">User with no fingerprint captured</h6>
+            </div>
+            <div class="card-body">
+                @if (TempData["UsersWithoutFile"] != null && ((IEnumerable<BioVerifyUser>)TempData["UsersWithoutFile"]).Any())
+                {
+                    <div class="container table-responsive py-5">
+                        <table class="table table-bordered table-hover">
+                            <thead class="">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">FirstName</th>
+                                    <th scope="col">LastName</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">PhoneNumber</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var user in (IEnumerable<BioVerifyUser>)TempData["UsersWithoutFile"])
+                                {
+                                    row++;
+                                    <tr>
+                                        <th scope="row">@row</th>
+                                        <td>@user.FirstName</td>
+                                        <td>@user.LastName</td>
+                                        <td>@user.Email</td>
+                                        <td>@user.PhoneNumb</td>
+                                        <td><a asp-controller="Fingerprint" asp-action="Index" asp-route-ID="@user.Id" class="btn btn-warning"><i class='fas fa-file' style='font-size:16px'></i>Add fingerprint</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="container">
+                        <h3>No users without fingerprint is found!</h3>
+                    </div>
+                }
+              
+            </div>
+        </div>
+    </div>
+</div>
+

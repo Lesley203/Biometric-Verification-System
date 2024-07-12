@@ -1,0 +1,153 @@
+﻿@using Biometric_Verification_System.Areas.Identity.Data
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_BiometricLayout.cshtml";
+}
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+    <style>
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+            .action-link i {
+                margin-right: 8px;
+            }
+
+            .action-link:hover {
+                color: #0056b3;
+            }
+    </style>
+</head>
+<div class="row main-content">
+    <div class="col-xl-12 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Fingerprint Capture</h6>
+            </div>
+
+            <div class="card-body">
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-info">
+                        @ViewBag.Message
+                    </div>
+                }
+                @* <h6 class="m-0 font-weight-bold ">Access Control</h6> *@
+                <br /><br />
+                <div class="scan-container">
+                    <div class="scan">
+                        <div class="fingerprint"></div>
+                        <h4 class="blink-soft" style="color:red">
+                            <div id="messages"></div>
+                        </h4>
+                    </div>
+                    <div class="scan">
+                        <div id="fingerprintStatus"></div>
+                        @* <p id="message">@Model.Message</p> *@
+                        <img id="fingerprintImage" src="" alt="Fingerprint Image" style="display:none;" />
+                    </div>
+                    <div class="scan">
+                        <div class="vertical-center">
+                            <a class="action-link" asp-action="Initialize" asp-controller="SearchEngine"><i class="fas fa-cog"></i>Initialize</a>
+                            <br /> <br />
+                            <a class="action-link" id="openDeviceButton" asp-action="Open" asp-controller="SearchEngine"><i class="fas fa-play"></i>Open device</a>
+                            <br /> <br />
+                            
+                          
+                            <a class="action-link" asp-action="CloseDevicee" asp-controller="SearchEngine"><i class="fas fa-stop"></i>close device</a>
+                        </div>
+                        <br /><br />
+                        <div class="">
+                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-overlay" style="display:none;">
+    <div class="spinner"></div>
+    <h3 class="spinner-text">Connecting to server...</h3>
+</div>
+<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="userName"></span></p>
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                <!-- Add more fields as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/fingerprintHub")
+        .build();
+
+    connection.on("ReceiveMessage", function (message) {
+        const msgDiv = document.getElementById("messages");
+        const msgElement = document.createElement("div");
+        msgElement.textContent = message;
+        msgDiv.appendChild(msgElement);
+    });
+
+    connection.on("ReceiveFingerprint", function (base64Image) {
+        const fingerprintImage = document.getElementById("fingerprintImage");
+        fingerprintImage.src = "data:image/bmp;base64," + base64Image;
+        fingerprintImage.style.display = "block";
+    });
+
+    connection.on("ReceiveUserDetails", function (userId, firstName, lastName, email) {
+        document.getElementById("userName").innerText = `${firstName} ${lastName}`;
+        document.getElementById("userEmail").innerText = email;
+        $('#userDetailsModal').modal('show');
+    });
+
+    connection.start().then(function () {
+        console.log("SignalR Connected.");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Function to show the spinner and blur the background
+        function showSpinner() {
+            document.querySelector('.main-content').classList.add('blurred');
+            document.querySelector('.spinner-overlay').style.display = 'flex';
+        }
+
+        // Function to hide the spinner
+        function hideSpinner() {
+            document.querySelector('.main-content').classList.remove('blurred');
+            document.querySelector('.spinner-overlay').style.display = 'none';
+        }
+
+        // Show spinner when the open device button is clicked
+       
+    });
+</script>
