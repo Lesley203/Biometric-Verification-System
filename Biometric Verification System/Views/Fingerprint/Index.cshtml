@@ -143,6 +143,7 @@
                     <div class="scan">
                         <div class="fingerprint"></div>
                         <h4 class="blink-soft" style="color:red"><div id="messages"></div></h4>
+                        <h4 class="blink-soft" style="color:seagreen"><div id="mesi"></div></h4>
                     </div>
                     <div class="scan">
                         <div id="fingerprintStatus"></div>
@@ -201,7 +202,7 @@
         msgElement.textContent = message;
         msgDiv.appendChild(msgElement);
     });
-
+   
     connection.on("ReceiveFingerprint", function (base64Image) {
         const fingerprintImage = document.getElementById("fingerprintImage");
         fingerprintImage.src = "data:image/bmp;base64," + base64Image;

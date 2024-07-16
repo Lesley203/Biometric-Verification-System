@@ -322,12 +322,13 @@ namespace Biometric_Verification_System.Controllers
                         foreach (var fingerprint in fingerprints)
                         {
                             int ret = zkfp2.DBMatch(mDBHandle, CapTmp, fingerprint.Data);
+                             
                             if (ret > 0)
                             {
                                 var user = fingerprint.GetBioUser;
-                                message = "Fingerprint Match successful!";
+                                string messa = "Fingerprint Match successful!";
                                 await _hubContext.Clients.All.SendAsync("ReceiveUserDetails", user.Id, user.FirstName, user.LastName, user.Email);
-                                await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
+                                await _hubContext.Clients.All.SendAsync("ReceiveMessag", messa);
                                 return;
                             }
                         }

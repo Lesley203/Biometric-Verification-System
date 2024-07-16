@@ -234,10 +234,10 @@ namespace Biometric_Verification_System.Controllers
                             if (ret > 0)
                             {
                                 var user = fingerprint.GetBioUser;
-                                message = "Fingerprint Match successful!";
-                                await _hubContext.Clients.All.SendAsync("ReceiveUserDetails", user.Id, user.FirstName, user.LastName, user.Email);
-                                await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
-                                return;
+                            string messa = "Fingerprint Match successful!";
+                            await _hubContext.Clients.All.SendAsync("ReceiveUserDetails", user.Id, user.FirstName, user.LastName, user.Email);
+                            await _hubContext.Clients.All.SendAsync("ReceiveMessag", messa);
+                            return;
                             }
                         }
                         message = "Fingerprint not matching!";
